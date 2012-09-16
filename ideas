@@ -1,0 +1,34 @@
+Track concerts and album releases by bands/artists.
+Notify users by
+    * RSS feed
+    * email
+    * twitter
+
+Ideas for data sources:
+    * crowd sourcing (people have to enter events)
+    * web scraping
+    * http://www.lastfm.de/api
+    * http://musicbrainz.org/doc/XML_Web_Service
+    * concert ticket vendor partner programs
+
+
+What data do we need?
+    * general data:
+        + who entered it
+        + when was it entered
+        + links with sources/more information
+    * album
+        + band
+        + album name
+        + release date
+        + link(s) (release announcement, vendor selling it)
+        + (optional) cover art
+        + (optional) track list
+    * concert
+        + band
+        + date
+        + location
+            - country
+            - town
+            - venue name
+            - long/lat
