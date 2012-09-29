@@ -13,6 +13,7 @@ my $link = Soonish::Link.new(
     url  => 'http://www.markknopfler.com/tour/',
     text => 'Mark Knopfler on Tour',
     _schema => $s,
+    entered-by => 'moritz',
 );
 $link.insert-or-update;
 

@@ -1,7 +1,9 @@
 use v6;
 
 role Soonish::Table {
-    has Int $.id;
+    has Int $.id is rw;
+
+    method !set_id($id) { $!id = $id }
     has $._schema;
 
     method table {
@@ -36,9 +38,8 @@ role Soonish::Table {
         else {
             $sth.execute(%a.values.map({ $_ ~~ Soonish::Table ?? .id || .insert.id  !! $_}));
         }
-        ($id) = $sth.fetchrow;
-        $sth.finish;
         $.id = $id;
+        $sth.finish;
         self;
     }
 
