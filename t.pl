@@ -16,8 +16,16 @@ my $link = Soonish::Link.new(
     entered-by => 'moritz',
 );
 $link.insert-or-update;
-say "ID: ", $link.id;
-$link.text = "Mark Knopfler's Tour plan";
-$link.update;
+say "link id: $link.id()";
+
+my $concert = Soonish::Concert.new(
+    artist      => 'Mark Knopfler',
+    date        => '2013-07-02',
+    location    => 'Köln, Germany',
+    entered-by  => 'moritz',
+    link        => $link,
+    _schema     => $s,
+);
+$concert.insert;
 
 $s.dbh.disconnect;
