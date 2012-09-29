@@ -38,6 +38,7 @@ role Soonish::Table {
         else {
             $sth.execute(%a.values.map({ $_ ~~ Soonish::Table ?? .id || .insert.id  !! $_}));
         }
+        $id = $sth.fetchrow[0].Int;
         $.id = $id;
         $sth.finish;
         self;
@@ -46,22 +47,23 @@ role Soonish::Table {
     method update(Bool :$recursive) {
         my %a := self.attributes;
         my $id = %a.delete('id');
-        unless $id.defined && $id != 0 {
+        unless $.id {
             die "Can only update an object that already has an id!";
         }
         my $dbh = $._schema.dbh;
         my $sql = join ' ',
-                    "UPDATE $dbh.quote-identifier($.table) ( ",
-                    %a.keys.map({$dbh.quote-identifier($_)}).join(', '),
-                    ') VALUES (',
-                    ('?' xx %a.elems).join(', '),
-                    ')';
+                    "UPDATE $dbh.quote-identifier($.table) SET ",
+                    %a.keys.map({$dbh.quote-identifier($_) ~ " = ?"}).join(', '),
+                    ' WHERE ',
+                    $dbh.quote-identifier('id'),
+                    ' = ?',
+                    ;
         my $sth = $dbh.prepare($sql);
         if $recursive {
-            $sth.execute(%a.values.map({ $_ ~~ Soonish::Table ?? (.insert-or-update.id)  !! $_ } ));
+            $sth.execute(%a.values.map({ $_ ~~ Soonish::Table ?? (.insert-or-update.id)  !! $_ } ), $.id);
         }
         else {
-            $sth.execute(%a.values.map({ $_ ~~ Soonish::Table ?? (.id || .insert.id)  !! $_ } ));
+            $sth.execute(%a.values.map({ $_ ~~ Soonish::Table ?? (.id || .insert.id)  !! $_ } ), $.id);
         }
         $sth.finish;
         self;

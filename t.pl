@@ -16,5 +16,8 @@ my $link = Soonish::Link.new(
     entered-by => 'moritz',
 );
 $link.insert-or-update;
+say "ID: ", $link.id;
+$link.text = "Mark Knopfler's Tour plan";
+$link.update;
 
 $s.dbh.disconnect;
