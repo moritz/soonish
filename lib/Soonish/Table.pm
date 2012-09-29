@@ -68,6 +68,7 @@ role Soonish::Table {
     method typemap($obj) {
         if $obj ~~ Soonish::Table {
             $obj.id ?? $obj !! $obj.insert;
+            $obj.id;
         }
         else {
             $obj;
