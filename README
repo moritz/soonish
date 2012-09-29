@@ -1,0 +1,17 @@
+Notification system for albums and concerts.
+Written in Perl 6.
+Very much a work in progress.
+
+=====
+To run it, set up a postgresql-9.2 database called 'soonish-dev' with role
+'soonish-dev' on localhost. Put the password in your ~/.pgpass file
+and in the SOONISH_DB_PASSWORD environment variable.
+
+You need to have the latest version of DBIish installed.
+
+Then run
+
+    $ ./db < schema.sql
+    $ perl6 t.pl
+
+There isn't more to it yet :(

@@ -2,11 +2,14 @@ use v6;
 
 role Soonish::Table {
     has Int $.id;
-    has $._table;
     has $._schema;
 
+    method table {
+        self.^name.split('::')[*-1].lc;
+    }
+
     method attributes {
-        self.^attributes.grep({ .name.substr(0,1) ne '_' }).map({; $.name => self."$_.name()"()}).hash;
+        self.^attributes.map(*.Str.substr(2)).grep({ .substr(0,1) ne '_' }).map({; $_ => self."$_"()}).hash;
     }
 
     method insert-or-create(Bool :$recursive) {
@@ -16,7 +19,7 @@ role Soonish::Table {
     method insert(Bool :$recursive) {
         my %a := self.attributes;
         my $id = %a.delete('id');
-        unless $id {
+        if $id {
             die "Cannot insert an object that already has an id!";
         }
         my $dbh = $._schema.dbh;
@@ -61,5 +64,9 @@ role Soonish::Table {
         }
         $sth.finish;
         self;
+    }
+
+    method insert-or-update(Bool :$recursive) {
+        $.id ?? $.update(:$recursive) !! $.insert(:$recursive);
     }
 }
