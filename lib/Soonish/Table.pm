@@ -32,10 +32,14 @@ role Soonish::Table {
                     ') VALUES (',
                     ('?' xx %a.elems).join(', '),
                     ') RETURNING id';
+        say $sql, '  ', @values.perl;
         my $sth = $dbh.prepare($sql);
+        say "execute";
         $sth.execute(@values);
+        say "fetchrow";
         $id = $sth.fetchrow[0].Int;
         $.id = $id;
+        say "finish";
         $sth.finish;
         self;
     }
@@ -55,6 +59,7 @@ role Soonish::Table {
                     $dbh.quote-identifier('id'),
                     ' = ?',
                     ;
+        say join ' ', $sql, @values, $.id;
         my $sth = $dbh.prepare($sql);
         $sth.execute(@values, $.id);
         $sth.finish;
